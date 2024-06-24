@@ -1,0 +1,103 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qkrtl", "qkrtl.vcxproj", "{34DB66EC-020E-465B-A70F-26284FAA6DA4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ut-qkrtl", "ut-qkrtl.vcxproj", "{A7C13CAC-B864-496B-9E74-DC3562CE6DB3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qknet", "qknet.vcxproj", "{432C7E30-5A4A-4882-9861-D393E5F404D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fr-qknet", "fr-qknet.vcxproj", "{2AAC8CDE-7B57-44A8-91A5-895A719668CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+		{432C7E30-5A4A-4882-9861-D393E5F404D5} = {432C7E30-5A4A-4882-9861-D393E5F404D5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lat-qknet", "lat-qknet.vcxproj", "{A34AF6B7-A3DD-4275-9513-27C4A5FBB2CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+		{432C7E30-5A4A-4882-9861-D393E5F404D5} = {432C7E30-5A4A-4882-9861-D393E5F404D5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qkhttp", "qkhttp.vcxproj", "{DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+		{432C7E30-5A4A-4882-9861-D393E5F404D5} = {432C7E30-5A4A-4882-9861-D393E5F404D5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "http-client", "http-client.vcxproj", "{4941CCDD-76AE-4442-A494-575280187DB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+		{432C7E30-5A4A-4882-9861-D393E5F404D5} = {432C7E30-5A4A-4882-9861-D393E5F404D5}
+		{DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5} = {DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qkinth", "qkinth.vcxproj", "{A8EAD277-529A-4C62-B63C-DD6D8C5369B5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lat-qkinth", "lat-qkinth.vcxproj", "{69D0FD63-4AC5-42AF-ADF1-8B371A3BDA71}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4} = {34DB66EC-020E-465B-A70F-26284FAA6DA4}
+		{A8EAD277-529A-4C62-B63C-DD6D8C5369B5} = {A8EAD277-529A-4C62-B63C-DD6D8C5369B5}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4}.Debug|x64.ActiveCfg = Debug|x64
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4}.Debug|x64.Build.0 = Debug|x64
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4}.Release|x64.ActiveCfg = Release|x64
+		{34DB66EC-020E-465B-A70F-26284FAA6DA4}.Release|x64.Build.0 = Release|x64
+		{A7C13CAC-B864-496B-9E74-DC3562CE6DB3}.Debug|x64.ActiveCfg = Debug|x64
+		{A7C13CAC-B864-496B-9E74-DC3562CE6DB3}.Debug|x64.Build.0 = Debug|x64
+		{A7C13CAC-B864-496B-9E74-DC3562CE6DB3}.Release|x64.ActiveCfg = Release|x64
+		{A7C13CAC-B864-496B-9E74-DC3562CE6DB3}.Release|x64.Build.0 = Release|x64
+		{432C7E30-5A4A-4882-9861-D393E5F404D5}.Debug|x64.ActiveCfg = Debug|x64
+		{432C7E30-5A4A-4882-9861-D393E5F404D5}.Debug|x64.Build.0 = Debug|x64
+		{432C7E30-5A4A-4882-9861-D393E5F404D5}.Release|x64.ActiveCfg = Release|x64
+		{432C7E30-5A4A-4882-9861-D393E5F404D5}.Release|x64.Build.0 = Release|x64
+		{2AAC8CDE-7B57-44A8-91A5-895A719668CE}.Debug|x64.ActiveCfg = Debug|x64
+		{2AAC8CDE-7B57-44A8-91A5-895A719668CE}.Debug|x64.Build.0 = Debug|x64
+		{2AAC8CDE-7B57-44A8-91A5-895A719668CE}.Release|x64.ActiveCfg = Release|x64
+		{2AAC8CDE-7B57-44A8-91A5-895A719668CE}.Release|x64.Build.0 = Release|x64
+		{A34AF6B7-A3DD-4275-9513-27C4A5FBB2CE}.Debug|x64.ActiveCfg = Debug|x64
+		{A34AF6B7-A3DD-4275-9513-27C4A5FBB2CE}.Debug|x64.Build.0 = Debug|x64
+		{A34AF6B7-A3DD-4275-9513-27C4A5FBB2CE}.Release|x64.ActiveCfg = Release|x64
+		{A34AF6B7-A3DD-4275-9513-27C4A5FBB2CE}.Release|x64.Build.0 = Release|x64
+		{DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5}.Debug|x64.ActiveCfg = Debug|x64
+		{DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5}.Debug|x64.Build.0 = Debug|x64
+		{DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5}.Release|x64.ActiveCfg = Release|x64
+		{DB6489BB-5C33-47F8-BCA1-A91D01CC3EB5}.Release|x64.Build.0 = Release|x64
+		{4941CCDD-76AE-4442-A494-575280187DB0}.Debug|x64.ActiveCfg = Debug|x64
+		{4941CCDD-76AE-4442-A494-575280187DB0}.Debug|x64.Build.0 = Debug|x64
+		{4941CCDD-76AE-4442-A494-575280187DB0}.Release|x64.ActiveCfg = Release|x64
+		{4941CCDD-76AE-4442-A494-575280187DB0}.Release|x64.Build.0 = Release|x64
+		{A8EAD277-529A-4C62-B63C-DD6D8C5369B5}.Debug|x64.ActiveCfg = Debug|x64
+		{A8EAD277-529A-4C62-B63C-DD6D8C5369B5}.Debug|x64.Build.0 = Debug|x64
+		{A8EAD277-529A-4C62-B63C-DD6D8C5369B5}.Release|x64.ActiveCfg = Release|x64
+		{A8EAD277-529A-4C62-B63C-DD6D8C5369B5}.Release|x64.Build.0 = Release|x64
+		{69D0FD63-4AC5-42AF-ADF1-8B371A3BDA71}.Debug|x64.ActiveCfg = Debug|x64
+		{69D0FD63-4AC5-42AF-ADF1-8B371A3BDA71}.Debug|x64.Build.0 = Debug|x64
+		{69D0FD63-4AC5-42AF-ADF1-8B371A3BDA71}.Release|x64.ActiveCfg = Release|x64
+		{69D0FD63-4AC5-42AF-ADF1-8B371A3BDA71}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C3B556AF-8F3E-4187-BE82-4DC39236B97A}
+	EndGlobalSection
+EndGlobal

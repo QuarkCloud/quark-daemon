@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{34DB66EC-020E-465B-A70F-26284FAA6DA4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>qkrtl</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;QKRTL_EXPORTS;_WINDOWS;_USRDLL;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;QKRTL_EXPORTS;_WINDOWS;_USRDLL;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\qkrtl\Buffer.h" />
+    <ClInclude Include="..\include\qkrtl\Coder.h" />
+    <ClInclude Include="..\include\qkrtl\Compile.h" />
+    <ClInclude Include="..\include\qkrtl\DateTime.h" />
+    <ClInclude Include="..\include\qkrtl\Event.h" />
+    <ClInclude Include="..\include\qkrtl\EventPoller.h" />
+    <ClInclude Include="..\include\qkrtl\EventQueue.h" />
+    <ClInclude Include="..\include\qkrtl\IoEvent.h" />
+    <ClInclude Include="..\include\qkrtl\IoHandle.h" />
+    <ClInclude Include="..\include\qkrtl\IoService.h" />
+    <ClInclude Include="..\include\qkrtl\Logger.h" />
+    <ClInclude Include="..\include\qkrtl\Object.h" />
+    <ClInclude Include="..\include\qkrtl\PerfInfo.h" />
+    <ClInclude Include="..\include\qkrtl\Poller.h" />
+    <ClInclude Include="..\include\qkrtl\PowerTwo.h" />
+    <ClInclude Include="..\include\qkrtl\RingBuffer.h" />
+    <ClInclude Include="..\include\qkrtl\Sequence.h" />
+    <ClInclude Include="..\include\qkrtl\Sequencer.h" />
+    <ClInclude Include="..\include\qkrtl\SpinLock.h" />
+    <ClInclude Include="..\include\qkrtl\SpinWaiter.h" />
+    <ClInclude Include="..\include\qkrtl\StateMonitor.h" />
+    <ClInclude Include="..\include\qkrtl\Stream.h" />
+    <ClInclude Include="..\include\qkrtl\Synch.h" />
+    <ClInclude Include="..\include\qkrtl\SystemInfo.h" />
+    <ClInclude Include="..\include\qkrtl\TestKits.h" />
+    <ClInclude Include="..\include\qkrtl\ThreadHelper.h" />
+    <ClInclude Include="..\include\qkrtl\Timer.h" />
+    <ClInclude Include="..\src\qkrtl\IocpPoller.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\qkrtl\Buffer.cpp" />
+    <ClCompile Include="..\src\qkrtl\Coder.cpp" />
+    <ClCompile Include="..\src\qkrtl\DateTime.cpp" />
+    <ClCompile Include="..\src\qkrtl\DllMain.cpp" />
+    <ClCompile Include="..\src\qkrtl\Event.cpp" />
+    <ClCompile Include="..\src\qkrtl\EventPoller.cpp" />
+    <ClCompile Include="..\src\qkrtl\EventQueue.cpp" />
+    <ClCompile Include="..\src\qkrtl\IocpPoller.cpp" />
+    <ClCompile Include="..\src\qkrtl\IocpUnbind.cpp" />
+    <ClCompile Include="..\src\qkrtl\IoEvent.cpp" />
+    <ClCompile Include="..\src\qkrtl\IoHandle.cpp" />
+    <ClCompile Include="..\src\qkrtl\IoService.cpp" />
+    <ClCompile Include="..\src\qkrtl\Logger.cpp" />
+    <ClCompile Include="..\src\qkrtl\Object.cpp" />
+    <ClCompile Include="..\src\qkrtl\PerfInfo.cpp" />
+    <ClCompile Include="..\src\qkrtl\Poller.cpp" />
+    <ClCompile Include="..\src\qkrtl\PowerTwo.cpp" />
+    <ClCompile Include="..\src\qkrtl\RingBuffer.cpp" />
+    <ClCompile Include="..\src\qkrtl\Sequence.cpp" />
+    <ClCompile Include="..\src\qkrtl\Sequencer.cpp" />
+    <ClCompile Include="..\src\qkrtl\SpinLock.cpp" />
+    <ClCompile Include="..\src\qkrtl\SpinWaiter.cpp" />
+    <ClCompile Include="..\src\qkrtl\StateMonitor.cpp" />
+    <ClCompile Include="..\src\qkrtl\Stream.cpp" />
+    <ClCompile Include="..\src\qkrtl\Synch.cpp" />
+    <ClCompile Include="..\src\qkrtl\SystemInfo.cpp" />
+    <ClCompile Include="..\src\qkrtl\TestKits.cpp" />
+    <ClCompile Include="..\src\qkrtl\ThreadHelper.cpp" />
+    <ClCompile Include="..\src\qkrtl\Timer.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
