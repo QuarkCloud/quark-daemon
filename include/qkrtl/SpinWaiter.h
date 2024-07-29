@@ -18,7 +18,7 @@ public:
     QKRTLAPI virtual void notifyAll();
     QKRTLAPI int waiterCount() const;
 private:
-    HANDLE semaphore_;
+    HANDLE semaphore_;  //linux∞Ê±æ¿‡À∆
     std::atomic<int> waiters_;
 };
 

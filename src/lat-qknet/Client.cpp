@@ -2,31 +2,9 @@
 #include "Client.h"
 #include "qkrtl/Logger.h"
 
-ClientConnector::ClientConnector(qkrtl::Poller& poller, Client* owner)
-    :qknet::ClientConnector(poller) ,owner_(owner)
-{
-    LOGCRIT("ClientConnector[%p] created", this);
-}
-ClientConnector::~ClientConnector()
-{
-    LOGCRIT("ClientConnector[%p] will be freed" , this);
-}
-bool ClientConnector::handleConnectSucceed(qknet::Socket& socket)
-{
-    return owner_->handleConnectSucceed(socket);
-}
-bool ClientConnector::handleConnectFailed(int errCode)
-{
-    return owner_->handleConnectFailed(errCode);
-}
-bool ClientConnector::handleConnectCompleted()
-{
-    owner_ = NULL;
-    return true;
-}
 
 Client::Client(qkrtl::Poller& poller)
-    :finaled_(false) ,poller_(poller) ,connector_(NULL) , connection_(NULL) , 
+    :qknet::Connector(poller) , finaled_(false) ,
     maxTimes_(0) , bufferSize_(0) , expectSize_(0) , readSize_(0) , writedSize_(0)
 {
     LOGDEBUG("Client[%p] created ", this);
@@ -34,6 +12,7 @@ Client::Client(qkrtl::Poller& poller)
 Client::~Client()
 {
     LOGDEBUG("Client[%p] will be freed", this);
+    final();
 }
 bool Client::init(int maxTimes, int bufferSize)
 {
@@ -46,8 +25,7 @@ bool Client::init(int maxTimes, int bufferSize)
     if (maxTimes_ <= 0 || bufferSize_ <= 0)
         return false;
 
-    if (inBuffer_.malloc(bufferSize_) == false ||
-        outBuffer_.malloc(bufferSize_) == false)
+    if (outBuffer_.malloc(bufferSize_) == false)
         return false;
 
     char* out = outBuffer_.cache();
@@ -66,52 +44,24 @@ void Client::final()
 
     LOGCRIT("Clien[%p] will final" , this);
 
-    if (connector_ != NULL)
-    {
-        delete connector_;
-        connector_ = NULL;
-    }
-
-    if (connection_ != NULL)
-    {
-        connection_->close();
-        connection_ = NULL;
-    }
-
-    inBuffer_.free();
     outBuffer_.free();
+    close();
 }
-bool Client::connect(const std::string& host, uint16_t port, int timeout)
+bool Client::handleStop()
 {
+    int handle = getHandle();
     std::unique_lock<std::mutex> locker(guard_);
-    if (connector_ != NULL || finaled_ == true)
-        return false;
+    LOGERR("Client[%p] handle[%d] handleStop ", this , handle);
+    return false;
+}
 
-    connector_ = new ClientConnector(poller_ , this);
-    return connector_->connect(host, port, timeout);
-}
-bool Client::allocInBuffer(qkrtl::Buffer& buffer)
+bool Client::handleRead(qkrtl::Buffer& buffer)
 {
-    buffer.swap(inBuffer_);
-    return true;
-}
-bool Client::freeInBuffer(qkrtl::Buffer& buffer)
-{
-    inBuffer_.swap(buffer);
-    inBuffer_.squish();
-    return true;
-}
-bool Client::freeOutBuffer(qkrtl::Buffer& buffer)
-{
-    outBuffer_.discard();
-    return true;
-}
-bool Client::handleInput(qkrtl::Buffer& buffer)
-{
+    int handle = getHandle();
     readSize_ += buffer.dataSize();
 
-    LOGCRIT("Client[%p] handle[%p] handleInput , readSize[%lld] dataSize[%d]",
-        this, qknet::SocketConnectionHandler::getHandle() , readSize_ , buffer.dataSize());
+    LOGCRIT("Client[%p] handle[%d] handleRead , readSize[%lld] dataSize[%d]",
+        this, handle , readSize_, buffer.dataSize());
 
     buffer.discard();
 
@@ -120,8 +70,7 @@ bool Client::handleInput(qkrtl::Buffer& buffer)
 
     if (readSize_ >= expectSize_)
     {
-        LOGCRIT("Client[%p] handle[%p] time elapse completed",
-            this, qknet::SocketConnectionHandler::getHandle());
+        LOGCRIT("Client[%p] handle[%d] time elapse completed",this, handle);
         timeElapse_.stop();
         states_.notify(maxTimes_);
         return true;
@@ -129,78 +78,60 @@ bool Client::handleInput(qkrtl::Buffer& buffer)
 
     return startOutput();
 }
-bool Client::handleOutput(qkrtl::Buffer& buffer)
+bool Client::handleWrited(qkrtl::Buffer& buffer)
 {
+    //outBuffer不释放
+    //发送请求的所有内存已经全部完成，
+    outBuffer_.discard();
+    return true;
+}
+bool Client::handleOutput(int errCode)
+{
+    int handle = getHandle();
     if (writedSize_ == 0)
     {
-        LOGCRIT("Client[%p] handle[%p] time elapse start" , 
-            this , qknet::SocketConnectionHandler::getHandle());
+        LOGCRIT("Client[%p] handle[%d] time elapse start",this, handle);
         timeElapse_.start();
     }
-    LOGDEBUG("Client[%p] handle[%p] handleOutput , writedSize[%lld]",
-        this, qknet::SocketConnectionHandler::getHandle() , writedSize_);
+    LOGDEBUG("Client[%p] handle[%d] handleOutput , writedSize[%lld]",this, handle, writedSize_);
 
     if (writedSize_ >= expectSize_)
     {
+        LOGDEBUG("Client[%p] handle[%d] handleOutput , writed completed", this, handle);
         return false;
     }
+    if (writedSize_ > readSize_)
+    {
+        LOGDEBUG("Client[%p] handle[%d] handleOutput , read not completed . writedSize[%lld] readSize[%lld]", 
+            this, handle , writedSize_ , readSize_);
+        return false;
+    }
+
 
     int64_t* outData = (int64_t*)outBuffer_.cache();
     if (outData == NULL)
         return false;
 
     *outData = writedSize_;
-    if(outBuffer_.extend(bufferSize_) == false)
-    { 
+    if (outBuffer_.extend(bufferSize_) == false)
+    {
+        LOGERR("Client[%p] handle[%d] handleOutput , failed to extend out buffer", this, handle);
         return false;
     }
     writedSize_ += bufferSize_;
-    buffer.refer(outBuffer_);
-    return true;
-}
-bool Client::handleStop()
-{
-    std::unique_lock<std::mutex> locker(guard_);
-    HANDLE handle = INVALID_HANDLE_VALUE;
-    if (connection_ != NULL)
-    {
-        handle = qknet::SocketConnectionHandler::getHandle();
-        LOGDEBUG("Client[%p] handle[%p] handleStop , connection reset",
-            this, handle);
-        connection_ = NULL;
-        return true;
-    }
 
-    LOGERR("Client[%p] handle[%p] handleStop , connector and connection is NULL", this , handle);
-    return false;
-}
-bool Client::handleConnectSucceed(qknet::Socket& socket)
-{
-    std::unique_lock<std::mutex> locker(guard_);
-    if (connection_ != NULL)
+    if (write(outBuffer_) == false)
     {
-        LOGERR("Client[%p] handle[%p] address[%s]'s connection had exist" , 
-            this , socket.getHandle() , socket.getFullAddress().c_str());
+        LOGERR("Client[%p] handle[%d] handleOutput , failed to write , dataSize[%d]", 
+            this, handle , outBuffer_.dataSize());
         return false;
     }
     else
     {
-        LOGERR("Client[%p] handle[%p] address[%s]'s connected",
-            this, socket.getHandle(), socket.getFullAddress().c_str());
+        LOGDEBUG("Client[%p] handle[%d] handleOutput , succeed to write , dataSize[%d]",
+            this, handle, outBuffer_.dataSize());
+        return true;
     }
-
-    connection_ = new qknet::SocketConnectionHandle(poller_);
-    connection_->swap(socket);
-    connection_->connected(true);
-    connection_->resetHandler(this);
-    connection_->start();
-    return true;
-}
-bool Client::handleConnectFailed(int errCode)
-{
-    std::unique_lock<std::mutex> locker(guard_);
-    states_.notify(kConnectFailed);
-    return true;
 }
 bool Client::waitForCompleted()
 {

@@ -2,14 +2,20 @@
 #ifndef QKRTL_IO_HANDLE_H
 #define QKRTL_IO_HANDLE_H 1
 
-#include <mutex>
-#include <deque>
 #include "qkrtl/Compile.h"
+#include "qkrtl/Object.h"
 #include "qkrtl/EventPoller.h"
+#include "qkrtl/SpinLock.h"
+#include "qkrtl/Synch.h"
+#include "qkrtl/OsHandle.h"
 
 namespace qkrtl {
 
-class IoHandle : public EventNode{
+/**
+*   2024-06-25
+    强化了EventPoller的接口，不需要IoHandle调用EventNode的execute。
+*/
+class IoHandle : public Object{
 public:
     QKRTLAPI IoHandle();
     QKRTLAPI virtual ~IoHandle();
@@ -25,13 +31,20 @@ public:
     QKRTLAPI virtual bool handleOutput(int errCode = 0);
     QKRTLAPI virtual bool startOutput();
 
-    QKRTLAPI virtual const HANDLE getHandle() const;
     QKRTLAPI virtual bool valid() const;
+
+    inline int getHandle() const { return identifier(); }
+    inline const OsHandle& getOsHandle() const { return osHandle_; }
+
+    QKRTLAPI virtual void setHandle(int handle) ;
+    QKRTLAPI virtual void setOsHandle(const OsHandle& handle);
+protected:
+    OsHandle osHandle_;
 };
 
 class IoHandler : public EventNode{
 public:
-    QKRTLAPI IoHandler();
+    QKRTLAPI IoHandler(IoHandle& ioHandle);
     QKRTLAPI virtual ~IoHandler();
 
     QKRTLAPI virtual void close();
@@ -43,8 +56,11 @@ public:
     QKRTLAPI virtual bool handleStop();
     QKRTLAPI virtual bool handle(int errCode = 0);
 
-    QKRTLAPI virtual const HANDLE getHandle() const;
-    QKRTLAPI virtual bool valid() const;
+    inline int getHandle() const { return ioHandle_.getHandle(); }
+    inline bool valid() const { return ioHandle_.valid(); }
+    inline const OsHandle& getOsHandle() const { return ioHandle_.getOsHandle(); }
+protected:
+    IoHandle& ioHandle_;
 };
 
 }

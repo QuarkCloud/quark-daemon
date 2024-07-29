@@ -3,9 +3,12 @@
 #define QKRTL_COMPILE_H 1
 
 #include <stdint.h>
-#include <windows.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WINDOWS) ||defined(_WINDOWS)
+
+#include <windows.h>
+
+#define PLATFORM_WINDOWS 
 
 #ifdef QKRTL_EXPORTS
 #define QKRTLAPI __declspec(dllexport)
@@ -14,6 +17,7 @@
 #endif
 
 #else
+#define PLATFORM_LINUX
 #define QKRTLAPI
 #endif
 

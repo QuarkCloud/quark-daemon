@@ -3,7 +3,8 @@
 
 namespace qkrtl {
 
-IoHandle::IoHandle()
+
+IoHandle::IoHandle() : osHandle_(kDefaultHandleValue)
 {
     //
 }
@@ -39,16 +40,20 @@ bool IoHandle::startOutput()
 {
     return true;
 }
-const HANDLE IoHandle::getHandle() const
-{
-    return INVALID_HANDLE_VALUE;
-}
 bool IoHandle::valid() const
 {
     return false;
 }
+void IoHandle::setHandle(int handle)
+{
+    identifier_ = handle;
+}
+void IoHandle::setOsHandle(const OsHandle& handle)
+{ 
+    osHandle_ = handle; 
+}
 
-IoHandler::IoHandler()
+IoHandler::IoHandler(IoHandle& ioHandle) : ioHandle_(ioHandle)
 {
     //
 }
@@ -77,14 +82,6 @@ bool IoHandler::handleStop()
     return false;
 }
 bool IoHandler::handle(int errCode)
-{
-    return false;
-}
-const HANDLE IoHandler::getHandle() const
-{
-    return INVALID_HANDLE_VALUE;
-}
-bool IoHandler::valid() const
 {
     return false;
 }

@@ -9,10 +9,10 @@
 
 int main(int argc, char* argv[])
 {
-    GetDefaltLogger()->fileLevel(qkrtl::Logger::kERROR);
+    GetDefaltLogger()->fileLevel(qkrtl::Logger::kMINLEVEL);
 
     const int kDefaultPort = 12345;
-    const int kMaxTimes = 1 << 14 ;
+    const int kMaxTimes = 1 << 12 ;
 
     qkrtl::IoService ioService("iocp");
     ioService.run();

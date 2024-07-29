@@ -61,10 +61,10 @@ bool EventNode::isMonitored() const
 }
 const char* EventNode::nodeTypeName(int type)
 {
-    static const int kNodeTypeMaxSize = 6;
+    static const int kNodeTypeMaxSize = 5;
     static const char* __InvalidNodeTypeName__ = "Invalid Type";
     static const char* __NodeTypeNames__[kNodeTypeMaxSize] =
-    { "None" , "File" , "Sock" , "Pipe" , "Timer" , "Inth"};
+    { "None" , "File" , "Sock" , "Pipe" , "Timer" };
 
     if (type < 0 || type >= kNodeTypeMaxSize)
         return __InvalidNodeTypeName__;

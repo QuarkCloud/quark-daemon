@@ -6,7 +6,7 @@
 #include <condition_variable>
 #include <set>
 
-#include "qknet/SocketConnector.h"
+#include "qknet/Connector.h"
 #include "qkrtl/Buffer.h"
 #include "qkrtl/IoService.h"
 #include "qkrtl/StateMonitor.h"
@@ -14,11 +14,13 @@
 /**
     由于该项目只是测试连接和释放，所以不需要实现SocketConnectionHandler。
 */
-class Client : public qknet::ClientConnector {
+class Client : public qknet::Connector {
 public:
     Client(qkrtl::Poller& poller);
     virtual ~Client();
-    virtual bool handleConnectCompleted();
+    virtual bool handleStart();
+    virtual bool handleStop();
+
     bool waitForCompleted();
 private:
     qkrtl::CounterMonitor waiter_;

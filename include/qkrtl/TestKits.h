@@ -51,7 +51,6 @@ public:
 QKRTLAPI std::string PickTestInfo(const char* expr, const char* function, const char* fileName, int line);
 
 }
-#define TESTCASE(x) static qkrtl::TestCaseRegier __TestCaseRegier##x__(#x , x)
 
 
 template<typename T>
@@ -81,5 +80,6 @@ do{\
         throw std::exception(qkrtl::PickTestInfo(#x , __FUNCTION__ , __FILE__ , __LINE__).c_str()); \
 }while(false)
 
+#define TESTCASE(x) static qkrtl::TestCaseRegier __TestCaseRegier##x##_(#x , x)
 
 #endif /**QKRTL_TEST_KITS_H*/

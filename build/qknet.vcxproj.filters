@@ -9,60 +9,93 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="头文件\windows">
+      <UniqueIdentifier>{e77dca32-2302-4ef6-be17-df2c68451866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\windows">
+      <UniqueIdentifier>{78019bac-45f6-4060-9dcf-5821f59178d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\qknet\Compile.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\SocketAddr.h">
+    <ClInclude Include="..\include\qknet\Address.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\Socket.h">
+    <ClInclude Include="..\include\qknet\IoEvent.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\SocketEvent.h">
+    <ClInclude Include="..\include\qknet\IoHandle.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\SocketAcceptor.h">
+    <ClInclude Include="..\include\qknet\Connection.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\SocketConnection.h">
+    <ClInclude Include="..\include\qknet\Acceptor.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\SocketConnector.h">
+    <ClInclude Include="..\include\qknet\Connector.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\qknet\SocketIoHandle.h">
+    <ClInclude Include="..\src\qknet\windows\WinSocketInit.h">
+      <Filter>头文件\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\qknet\windows\Socket.h">
+      <Filter>头文件\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\qknet\windows\FileEvent.h">
+      <Filter>头文件\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\qknet\windows\FileObject.h">
+      <Filter>头文件\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\qknet\windows\FileSystem.h">
+      <Filter>头文件\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\qknet\Options.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\qknet\DllMain.cpp">
+    <ClCompile Include="..\src\qknet\Address.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\WinSocketInit.cpp">
+    <ClCompile Include="..\src\qknet\IoEvent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\SocketAddr.cpp">
+    <ClCompile Include="..\src\qknet\IoHandle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\Socket.cpp">
+    <ClCompile Include="..\src\qknet\Connection.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\SocketEvent.cpp">
+    <ClCompile Include="..\src\qknet\Acceptor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\SocketConnector.cpp">
+    <ClCompile Include="..\src\qknet\Connector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\SocketAcceptor.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\src\qknet\windows\DllMain.cpp">
+      <Filter>源文件\windows</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\SocketConnection.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\src\qknet\windows\FileSystem.cpp">
+      <Filter>源文件\windows</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\qknet\SocketIoHandle.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\src\qknet\windows\Socket.cpp">
+      <Filter>源文件\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qknet\windows\WinSocketInit.cpp">
+      <Filter>源文件\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qknet\windows\FileEvent.cpp">
+      <Filter>源文件\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qknet\windows\FileObject.cpp">
+      <Filter>源文件\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qknet\windows\Options.cpp">
+      <Filter>源文件\windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

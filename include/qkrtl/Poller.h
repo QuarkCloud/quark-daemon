@@ -4,6 +4,7 @@
 
 #include "qkrtl/Compile.h"
 #include "qkrtl/Event.h"
+#include "qkrtl/Object.h"
 #include "qkrtl/EventPoller.h"
 #include <mutex>
 #include <map>
@@ -24,7 +25,7 @@ public:
     virtual bool monitor(EventNode* node);
     virtual bool unmonitor(EventNode* node);
     virtual bool post(const Event& event);
-    virtual bool asynDestroy(EventObject * object);
+    virtual bool asynDestroy(Object* object);
     virtual int wait(Event* events, int maxCount, int timeout = 0); //∫¡√Î
     virtual bool shutdown();
     virtual void final();
@@ -62,7 +63,7 @@ public:
     QKRTLAPI virtual bool monitor(EventNode* node);
     QKRTLAPI virtual bool unmonitor(EventNode* node);
     QKRTLAPI virtual bool post(const Event& event);
-    QKRTLAPI virtual bool asynDestroy(EventObject* object);
+    QKRTLAPI virtual bool asynDestroy(Object* object);
     QKRTLAPI virtual int wait(Event* events, int maxCount, int timeout = 0); //∫¡√Î
     QKRTLAPI bool shutdown();
     QKRTLAPI void final();

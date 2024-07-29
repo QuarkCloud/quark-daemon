@@ -35,6 +35,7 @@ public:
     static const int kINFO = 6;
     static const int kDEBUG = 7;
     static const int kMAXLEVEL = kDEBUG;
+    static const int kMINLEVEL = kEMERG;
 
 private:
     FILE * file_;

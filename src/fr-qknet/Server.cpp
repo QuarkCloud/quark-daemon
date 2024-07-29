@@ -3,7 +3,8 @@
 #include "qkrtl/Logger.h"
 
 
-Session::Session(qknet::SocketConnectionHandlerManager& sessions):sessions_(sessions)
+Session::Session(qkrtl::Poller& poller, qknet::ConnectionManager& sessions)
+    :qknet::Connection(poller) ,sessions_(sessions)
 {
     LOGDEBUG("Session[%p] created ", this );
 }
@@ -11,33 +12,17 @@ Session::~Session()
 {
     LOGDEBUG("Session[%p] will be freed" , this);
 }
-bool Session::allocInBuffer(qkrtl::Buffer& buffer)
+bool Session::handleInput(int errCode)
 {
-    return buffer.malloc(1 << 16);
-}
-bool Session::freeInBuffer(qkrtl::Buffer& buffer)
-{
-    buffer.free();
     return true;
 }
-bool Session::freeOutBuffer(qkrtl::Buffer& buffer)
+bool Session::handleOutput(int errCode)
 {
-    buffer.free();
     return true;
 }
-bool Session::handleInput(qkrtl::Buffer& buffer)
+bool Session::handleError(int errCode)
 {
-    if (buffer.empty() == true || inStream_.push(buffer) == false)
-    {
-        buffer.free();
-        return true;
-    }
-
-    return startOutput();
-}
-bool Session::handleOutput(qkrtl::Buffer& buffer)
-{
-    return inStream_.pop(buffer);
+    return true;
 }
 bool Session::handleStop()
 {
@@ -46,7 +31,7 @@ bool Session::handleStop()
 }
 
 Server::Server(qkrtl::Poller& poller)
-    :poller_(poller) , finaled_(false), acceptor_(NULL) , sessions_(poller)
+    :qknet::Acceptor(poller) , finaled_(false)
 {
     //
 }
@@ -57,12 +42,9 @@ Server::~Server()
 bool Server::init(uint16_t port)
 {
     std::unique_lock<std::mutex> locker(guard_);
-    if (acceptor_ != NULL)
+    if (qknet::Acceptor::init(port) == false)
         return false;
-    acceptor_ = new qknet::SocketAcceptHandle(poller_);
-    acceptor_->resetHandler(this);
-
-    return acceptor_->init(port, SOMAXCONN);
+    return true;
 }
 void Server::final()
 {
@@ -70,34 +52,16 @@ void Server::final()
     if (finaled_ == true)
         return;
     finaled_ = true;
-    qknet::SocketAcceptHandle* acceptor = acceptor_;
-    acceptor_ = NULL;
-
-    if (acceptor != NULL)
-        acceptor->close();
-
+    qknet::Acceptor::final();
     sessions_.final();
 }
-bool Server::handleAccepted(qknet::Socket& socket)
+int Server::handleAccept(int* handles, int size)
 {
-    if (socket.valid() == false)
-        return false;
-
-    qknet::SocketConnectionHandle* conn = new qknet::SocketConnectionHandle(poller_);
-    Session* sess = new Session(sessions_);
-    conn->swap(socket);
-    conn->connected(true);
-    conn->resetHandler(sess);
-    conn->start();
-
-    return sessions_.insert(sess);
+    return 0;
 }
 bool Server::handleStop()
 {
     std::unique_lock<std::mutex> locker(guard_);
-    LOGINFO("Server[%p] handle stop , acceptor[%p]", this , acceptor_);
-    acceptor_ = NULL;
-
     sessions_.clear();
     return true;
 }

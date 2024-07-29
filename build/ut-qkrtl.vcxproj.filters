@@ -24,5 +24,8 @@
     <ClCompile Include="..\src\ut-qkrtl\UtPowerTwo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ut-qkrtl\UtUrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -24,8 +24,8 @@ class TimerTask : public EventNode {
 public:
     QKRTLAPI TimerTask(const std::string& name = "");
     QKRTLAPI virtual ~TimerTask();
-
-    QKRTLAPI bool init(int64_t fireTime , int64_t period = 0);
+    QKRTLAPI bool runAfter(int64_t afterTime);
+    QKRTLAPI bool runAt(int64_t fireTime , int64_t period = 0);
     QKRTLAPI void fire();
     QKRTLAPI int64_t period()const;
     QKRTLAPI int64_t fireTime() const;

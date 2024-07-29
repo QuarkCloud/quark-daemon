@@ -2,7 +2,7 @@
 #include "Client.h"
 #include "qkrtl/Logger.h"
 
-Client::Client(qkrtl::Poller& poller):qknet::ClientConnector(poller)
+Client::Client(qkrtl::Poller& poller):qknet::Connector(poller)
 {
     //
 }
@@ -10,10 +10,16 @@ Client::~Client()
 {
     //
 }
-bool Client::handleConnectCompleted()
+bool Client::handleStart()
 {
     waiter_.addCounter();
     return true;
+}
+bool Client::handleStop()
+{
+    waiter_.addCounter();
+    return true;
+
 }
 bool Client::waitForCompleted()
 {

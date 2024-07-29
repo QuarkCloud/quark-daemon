@@ -95,6 +95,21 @@
     <ClInclude Include="..\include\qkrtl\Object.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\qkrtl\NonePoller.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\qkrtl\FileSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\qkrtl\String.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\qkrtl\Url.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\qkrtl\OsHandle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\qkrtl\DllMain.cpp">
@@ -182,6 +197,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\qkrtl\Object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qkrtl\NonePoller.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qkrtl\FileSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qkrtl\String.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\qkrtl\Url.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

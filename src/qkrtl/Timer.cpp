@@ -12,8 +12,11 @@ TimerTask::~TimerTask()
 {
     //
 }
-
-bool TimerTask::init(int64_t fireTime, int64_t period)
+bool TimerTask::runAfter(int64_t afterTime)
+{
+    return runAt(afterTime + UTimeNow());
+}
+bool TimerTask::runAt(int64_t fireTime, int64_t period)
 {
     fireTime_ = fireTime;
     period_ = period;

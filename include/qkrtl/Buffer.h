@@ -7,8 +7,8 @@
 
 namespace qkrtl {
 /**
-    需要特别注意，Buffer类不参与内存的分配和释放。
-    Buffer不支持虚函数，所以可以等价于struct，可以用malloc/free
+    虚函数表占8个字节，整个类的总字节数控制在32个字节，
+    8 + 8 + 4 + 4 + 4 + 4
 */
 class QKRTLAPI Buffer {
 public:
@@ -23,7 +23,7 @@ public:
     void squish();
     //废弃所有数据，重置头部
     void discard();
-    bool refer(char * buffer , int buflen , int start = 0, int size = 0);
+    bool refer(const char * buffer , int buflen , int start = 0, int size = 0);
     bool refer(const Buffer& buffer);
     bool move(Buffer& buffer);
     void clear();
@@ -48,25 +48,30 @@ public:
 
     bool malloc(int size);
     void free();
+
+    static const int kStatusNone = 0;
+    static const int kStatusOwned = 1;
+
+    inline int status() const { return status_; }
 private:
     mutable char* cache_;
     int capacity_;
     int dataStart_;
     int dataSize_;
+    int status_;    //默认为0，不分配内存，也不自动释放内存，这个特性非常重要。
 };
 
+class Allocator {
+public:
+    QKRTLAPI Allocator();
+    QKRTLAPI virtual ~Allocator();
+
+    QKRTLAPI bool alloc(Buffer& buffer, int size);
+    QKRTLAPI void free(Buffer& buffer);
+private:
+    //
+};
 
 }
-
-#ifdef __cplusplus
-extern "C" {
-#endif 
-
-QKRTLAPI char* AllocPage(int size , int * exactSize = NULL);
-QKRTLAPI void FreePage(char * addr);
-
-#ifdef __cplusplus
-}
-#endif 
 
 #endif /**QKRTL_BUFFER_H*/

@@ -5,7 +5,7 @@
 
 Application::Application(qkrtl::IoService& ioService):finaled_(false), server_(ioService)
 {
-    //
+    FsInit(1 << 20);
 }
 Application::~Application()
 {

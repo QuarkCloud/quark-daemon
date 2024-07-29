@@ -13,7 +13,6 @@ Object::~Object()
 {
     //
 }
-
 ObjectManager::ObjectManager()
     :lastIndex_(0) , head_(0) ,  tail_(0) , size_(0) , 
     nodes_(NULL) , maxSize_(0)
@@ -42,6 +41,7 @@ void ObjectManager::final()
 {
     ObjectNode* nodes = NULL;
     {
+        Locker locker(guard_);
         nodes = nodes_;
         nodes_ = NULL;
         maxSize_ = 0;
@@ -58,6 +58,7 @@ bool ObjectManager::insert(Object* obj)
     if (obj == NULL || valid(obj->identifier()) == true)
         return false;
 
+    Locker locker(guard_);
     if (lastIndex_ >= 0 && (lastIndex_ + 1) < maxSize_)
     {
         //单向仍然存在有效索引
@@ -101,7 +102,11 @@ bool ObjectManager::remove(Object* obj)
     if (index <= 0 || index >= maxSize_)
         return false;
 
+    Locker locker(guard_);
     ObjectNode& node = nodes_[index];
+    if (node.object != obj)
+        return false;
+
     node.object = NULL;
     node.status = 0;
     node.next = 0;
@@ -127,6 +132,8 @@ bool ObjectManager::remove(int oid, Object*& obj)
     if (oid <= 0 || oid >= maxSize_)
         return false;
 
+    Locker locker(guard_);
+
     ObjectNode& node = nodes_[oid];
     if (node.status == 0 || node.object == NULL)
         return false;
@@ -149,6 +156,26 @@ bool ObjectManager::remove(int oid, Object*& obj)
         tail_ = oid;
     }
     --size_;
+    return true;
+}
+bool ObjectManager::exchange(int oid, Object* obj, Object*& old)
+{
+    old = NULL;
+    if (oid <= 0 || oid >= maxSize_)
+        return false;
+
+    Locker locker(guard_);
+
+    ObjectNode& node = nodes_[oid];
+    if (node.status == 0 || node.object == NULL)
+        return false;
+
+    obj->identifier_ = oid;
+
+    old = node.object;
+    node.object = obj;
+    old->identifier_ = Object::kInvalidIdentifier;
+
     return true;
 }
 Object* ObjectManager::find(int oid)

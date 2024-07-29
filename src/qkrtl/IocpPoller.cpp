@@ -31,7 +31,7 @@ bool IocpPoller::monitor(EventNode* node)
         if (handler->valid() == false)
             return false;
 
-        HANDLE handle = handler->getHandle();
+        HANDLE handle = handler->getOsHandle();
 
         std::unique_lock<std::mutex> locker(guard_);
         std::map<HANDLE , int>::iterator hiter = handles_.find(handle);
@@ -96,7 +96,7 @@ bool IocpPoller::unmonitor(EventNode* node)
                 node, EventNode::nodeTypeName(nodeType) );
             return false;
         }
-        HANDLE handle = handler->getHandle();
+        HANDLE handle = handler->getOsHandle();
         handler->stop();
         std::unique_lock<std::mutex> locker(guard_);
         bool result = true;
@@ -114,7 +114,7 @@ bool IocpPoller::unmonitor(EventNode* node)
             }
             else
             {
-                LOGINFO("Handle[%p] still has [%d] bindings ， no need unbind",handle, count);
+                LOGINFO("Handle[%p] still has [%d] bindings , no need unbind",handle, count);
             }
         }
         else
@@ -199,7 +199,7 @@ bool IocpPoller::waitFor(int timeout)
     LOGDEBUG("Poller GetQueuedCompletionStatusEx , events backlog[%d] timeout[%d]",
         count , timeout);
 
-    //如果已经有events在挤压，那么文件部分不再等待。
+    //如果已经有events在积压，那么文件部分不再等待。
     result = ::GetQueuedCompletionStatusEx(iocp_,
         entries, entryCount, &completedCount, timeout, FALSE);
 
@@ -213,13 +213,6 @@ bool IocpPoller::waitFor(int timeout)
     {
         for (ULONG cidx = 0; cidx < completedCount; ++cidx)
         {
-            //typedef struct _OVERLAPPED_ENTRY {
-            //    ULONG_PTR lpCompletionKey;
-            //    LPOVERLAPPED lpOverlapped;
-            //    ULONG_PTR Internal;
-            //    DWORD dwNumberOfBytesTransferred;
-            //} OVERLAPPED_ENTRY, * LPOVERLAPPED_ENTRY;
-
             OVERLAPPED_ENTRY& entry = entries[cidx];
             ULONG_PTR key = entry.lpCompletionKey;
             DWORD bytes = entry.dwNumberOfBytesTransferred;
@@ -239,37 +232,8 @@ bool IocpPoller::waitFor(int timeout)
             {
                 continue;
             }
-            IoEvent* ioEvent = (IoEvent*)ovlp;
 
-            //int errCode = 0;
-            //if (internal != 0)
-            //{
-            //    //以后再使用RtlNtStatusToDosError 处理NTSTATUS的转换逻辑
-            //    //目前返回0XC0000120 = STATUS_CANCLED
-            //    errCode = (int)(internal & 0X0FFFFFFFULL);
-            //    LOGERR("GetQueuedCompletionStatus recv an internal , ovlp[%p] errCode[%d]" , 
-            //        ovlp , errCode);
-            //}
-            //else
-            //{
-            //    DWORD lastError = ::GetLastError();
-            //    if (lastError != 0)
-            //        errCode = (int)lastError;
-
-            //    LOGERR("GetQueuedCompletionStatus recv an internal=0 , ovlp[%p] errCode[%d]",
-            //        ovlp, errCode);
-            //}
-
-            //if (errCode == 0)
-            //{
-            //    ioEvent->success(bytes);
-            //}
-            //else
-            //{
-
-            //    ioEvent->failure(errCode);
-            //}
-
+            windows::FileEvent* ioEvent = (windows::FileEvent*)ovlp;
             if (internal == 0)
             {
                 ioEvent->success(bytes);
@@ -294,11 +258,11 @@ bool IocpPoller::waitFor(int timeout)
         if (errCode != WAIT_TIMEOUT)
         {
             LOGERR("failed to GetQueuedCompletionStatus , errCode[%d]", (int)errCode);
-            return true;
+            return false;
         }
         else
         {
-            return false;
+            return true;
         }
     }
 }

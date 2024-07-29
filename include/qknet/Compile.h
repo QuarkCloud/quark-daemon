@@ -3,9 +3,9 @@
 #define QKNET_COMPILE_H 1
 
 #include <stdint.h>
-#include <windows.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WINDOWS) ||defined(_WINDOWS)
+#include <windows.h>
 
 #ifdef QKNET_EXPORTS
 #define QKNETAPI __declspec(dllexport)

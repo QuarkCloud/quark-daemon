@@ -1,26 +1,29 @@
 
+#include <stdlib.h>
+#include <string.h>
 #include "qkrtl/Buffer.h"
 #include "qkrtl/PowerTwo.h"
 #include "qkrtl/SystemInfo.h"
 
 namespace qkrtl {
-Buffer::Buffer():cache_(NULL) , capacity_(0) , dataStart_(0) , dataSize_(0)
+Buffer::Buffer()
+    :cache_(NULL) , capacity_(0) , dataStart_(0) , dataSize_(0) , status_(kStatusNone)
 {
     //
 }
 Buffer::Buffer(const Buffer& buffer) 
-    : cache_(NULL), capacity_(0), dataStart_(0), dataSize_(0)
+    : cache_(NULL), capacity_(0), dataStart_(0), dataSize_(0), status_(kStatusNone)
 {
     refer(buffer);
 }
 Buffer::Buffer(char* buffer, int buflen) 
-    : cache_(NULL), capacity_(0), dataStart_(0), dataSize_(0)
+    : cache_(NULL), capacity_(0), dataStart_(0), dataSize_(0), status_(kStatusNone)
 {
     refer(buffer, buflen);
 }
 Buffer::~Buffer()
 {
-    //
+    free();
 }
 
 bool Buffer::extend(int length)
@@ -60,34 +63,43 @@ void Buffer::discard()
     dataStart_ = 0;
     dataSize_ = 0;
 }
-bool Buffer::refer(char* buffer, int buflen, int start, int size)
+bool Buffer::refer(const char* buffer, int buflen, int start, int size)
 {
+    free();
+
     if (buffer == NULL || buflen <= 0 || start < 0 || size < 0)
         return false;
 
     if (start + size > buflen)
         return false;
 
-    cache_ = buffer;
+    cache_ = (char *)buffer;
     capacity_ = buflen;
     dataStart_ = start;
     dataSize_ = size;
+    status_ = kStatusNone;
     return true;
 }
 bool Buffer::refer(const Buffer& buffer)
 {
+    free();
+
     cache_ = buffer.cache_;
     capacity_ = buffer.capacity_;
     dataStart_ = buffer.dataStart_;
     dataSize_ = buffer.dataSize_;
+    status_ = kStatusNone;
     return true;
 }
 bool Buffer::move(Buffer& buffer)
 {
+    free();
+
     cache_ = buffer.cache_;
     capacity_ = buffer.capacity_;
     dataStart_ = buffer.dataStart_;
     dataSize_ = buffer.dataSize_;
+    status_ = buffer.status_;
 
     buffer.clear();
     return true;
@@ -97,6 +109,7 @@ void Buffer::clear()
     cache_ = NULL;
     capacity_ = 0;
     dataStart_ = dataSize_ = 0;
+    status_ = kStatusNone;
 }
 int Buffer::append(const char* buffer, int size)
 {
@@ -125,16 +138,19 @@ void Buffer::swap(Buffer& buffer)
     int tmpCapacity = capacity_;
     int tmpDataStart = dataStart_;
     int tmpDataSize = dataSize_;
+    int tmpStatus_ = status_;
 
     cache_ = buffer.cache_;
     capacity_ = buffer.capacity_;
     dataStart_ = buffer.dataStart_;
     dataSize_ = buffer.dataSize_;
+    status_ = buffer.status_;
 
     buffer.cache_ = tmpCache;
     buffer.capacity_ = tmpCapacity;
     buffer.dataStart_ = tmpDataStart;
     buffer.dataSize_ = tmpDataSize;
+    buffer.status_ = tmpStatus_;
 }
 const char* Buffer::head() const
 {
@@ -166,39 +182,39 @@ bool Buffer::malloc(int size)
     if (size <= 0)
         return false;
 
-    int exactSize = 0;
-    char* page = AllocPage(size , &exactSize);
-    if (page == NULL || exactSize <= 0)
+    char* addr = (char*)::malloc(size);
+    if (addr == NULL)
         return false;
 
-    cache_ = page;
-    capacity_ = exactSize;
+    cache_ = addr;
+    capacity_ = size;
+    status_ = kStatusOwned;
     return true;
 }
 void Buffer::free()
 {
-    char* page = cache_;
+    char* addr = cache_;
     clear();
-    if (page != NULL)
-        ::FreePage(page);
+
+    if (status_ == kStatusOwned && addr != NULL)
+        ::free(addr);
 }
 
-}
-
-char* AllocPage(int size, int* exactSize)
+Allocator::Allocator()
 {
-    if (size <= 0)
-        return NULL;
-
-    int pageSize = (int)qkrtl::SystemInfo::singleton().pageSize();
-    int expectSize = qkrtl::AlignSize(size, pageSize);
-
-    if (exactSize != NULL)
-        *exactSize = expectSize;
-
-    return (char*)::VirtualAlloc(NULL, expectSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    //
 }
-void FreePage(char* addr)
+Allocator::~Allocator()
 {
-    ::VirtualFree(addr, 0, MEM_RELEASE);
+    //
 }
+bool Allocator::alloc(Buffer& buffer, int size)
+{
+    return buffer.malloc(size);
+}
+void Allocator::free(Buffer& buffer)
+{
+    buffer.free();
+}
+}
+

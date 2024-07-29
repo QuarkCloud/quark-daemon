@@ -6,41 +6,23 @@
 #include <condition_variable>
 #include <set>
 
-#include "qknet/SocketConnector.h"
+#include "qknet/Connector.h"
 #include "qkrtl/Buffer.h"
 #include "qkrtl/IoService.h"
 #include "qkrtl/StateMonitor.h"
 #include "qkrtl/PerfInfo.h"
 
-class Client;
-class ClientConnector : public qknet::ClientConnector {
-public:
-    ClientConnector(qkrtl::Poller& poller , Client * owner);
-    virtual ~ClientConnector();
-    virtual bool handleConnectSucceed(qknet::Socket& socket);
-    virtual bool handleConnectFailed(int errCode);
-    virtual bool handleConnectCompleted();
-private:
-    Client* owner_;
-};
 
-class Client : public qknet::SocketConnectionHandler  {
+class Client : public qknet::Connector {
 public:
     Client(qkrtl::Poller& poller);
     virtual ~Client();
     bool init(int maxTimes, int bufferSize);
     virtual void final();
-    bool connect(const std::string& host, uint16_t port, int timeout);
-    virtual bool allocInBuffer(qkrtl::Buffer& buffer);
-    virtual bool freeInBuffer(qkrtl::Buffer& buffer);
-    virtual bool freeOutBuffer(qkrtl::Buffer& buffer);
-    virtual bool handleInput(qkrtl::Buffer& buffer);
-    virtual bool handleOutput(qkrtl::Buffer& buffer);
     virtual bool handleStop();
-
-    virtual bool handleConnectSucceed(qknet::Socket& socket);
-    virtual bool handleConnectFailed(int errCode);
-
+    virtual bool handleRead(qkrtl::Buffer& buffer);
+    virtual bool handleWrited(qkrtl::Buffer& buffer);
+    virtual bool handleOutput(int errCode = 0);
     bool waitForCompleted();
 
     inline int64_t elapse() const { return timeElapse_.elapse(); }
@@ -49,11 +31,7 @@ public:
 private:
     std::mutex guard_;
     bool finaled_;
-    qkrtl::Poller& poller_;
-    qkrtl::Buffer inBuffer_;
     qkrtl::Buffer outBuffer_;
-    ClientConnector* connector_;
-    qknet::SocketConnectionHandle* connection_;
     qkrtl::TimeElapse  timeElapse_;
     int maxTimes_;
     int bufferSize_;

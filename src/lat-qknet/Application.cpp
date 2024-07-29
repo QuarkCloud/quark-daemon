@@ -6,7 +6,7 @@
 Application::Application()
     :finaled_(false) , ioService_("iocp") , server_(ioService_), client_(ioService_)
 {
-    //
+    FsInit(1 << 10);
 }
 Application::~Application()
 {

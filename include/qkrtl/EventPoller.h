@@ -39,7 +39,6 @@ public:
     static const int kTypeSock = 2;
     static const int kTypePipe = 3;     //只支持有名管道
     static const int kTypeTimer = 4;
-    static const int kTypeInth = 5;
 
     static const  char* nodeTypeName(int type);
 protected:

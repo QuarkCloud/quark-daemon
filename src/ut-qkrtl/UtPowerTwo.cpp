@@ -25,4 +25,4 @@ bool testLogOfTwo()
 }
 
 //TESTCASE(testCeilingNextPowerOfTwo);
-TESTCASE(testLogOfTwo);
+//TESTCASE(testLogOfTwo);

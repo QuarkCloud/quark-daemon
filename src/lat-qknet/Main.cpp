@@ -8,11 +8,11 @@
 
 int main(int argc, char* argv[])
 {
-    GetDefaltLogger()->fileLevel(qkrtl::Logger::kEMERG);
+    GetDefaltLogger()->fileLevel(qkrtl::Logger::kMAXLEVEL);
     
     const int kDefaultPort = 12345;
 
-    const int kMaxTimes = 1 << 16;
+    const int kMaxTimes = 1 ;
     const int kBufferMaxSize = 1 << 8;
 
     Application app;

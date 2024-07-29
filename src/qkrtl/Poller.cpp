@@ -24,12 +24,12 @@ bool PollerImpl::post(const Event& event)
 {
     return false;
 }
-bool PollerImpl::asynDestroy(EventObject* object)
+bool PollerImpl::asynDestroy(Object* object)
 {
     qkrtl::Event event = qkrtl::Event::Initializer;
-    event.dataType = qkrtl::Event::kDataTypeEvt;
+    event.dataType = qkrtl::Event::kDataTypeObj;
     event.status = qkrtl::Event::kStatusFree;
-    event.data.event = object;
+    event.data.object = object;
     return post(event);
 }
 int PollerImpl::wait(Event* events, int maxCount, int timeout)
@@ -135,7 +135,7 @@ bool Poller::post(const Event& event)
         return false;
     return impl_->post(event);
 }
-bool Poller::asynDestroy(EventObject* object)
+bool Poller::asynDestroy(Object* object)
 {
     if (impl_ == NULL)
         return false;

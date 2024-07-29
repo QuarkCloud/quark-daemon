@@ -10,25 +10,24 @@
 #include "qkrtl/Poller.h"
 #include "qkrtl/PerfInfo.h"
 #include "qkrtl/Stream.h"
-#include "qknet/SocketAcceptor.h"
-#include "qknet/SocketConnection.h"
+#include "qknet/Acceptor.h"
+#include "qknet/Connection.h"
 
-class Session : public qknet::SocketConnectionHandler {
+class Session : public qknet::Connection {
 public:
-    Session(qknet::SocketConnectionHandlerManager& sessions);
+    Session(qkrtl::Poller& poller , qknet::ConnectionManager& sessions);
     virtual ~Session();
-    virtual bool allocInBuffer(qkrtl::Buffer& buffer);
-    virtual bool freeInBuffer(qkrtl::Buffer& buffer);
-    virtual bool freeOutBuffer(qkrtl::Buffer& buffer);
-    virtual bool handleInput(qkrtl::Buffer& buffer);
-    virtual bool handleOutput(qkrtl::Buffer& buffer);
+
+    virtual bool handleInput(int errCode = 0);
+    virtual bool handleOutput(int errCode = 0);
+    virtual bool handleError(int errCode);
     virtual bool handleStop();
 private:
     qkrtl::Stream inStream_;
-    qknet::SocketConnectionHandlerManager& sessions_;
+    qknet::ConnectionManager& sessions_;
 };
 
-class Server : public qknet::SocketAcceptHandler {
+class Server : public qknet::Acceptor {
 public:
     Server(qkrtl::Poller& poller);
     virtual ~Server();
@@ -36,14 +35,12 @@ public:
     bool init(uint16_t port);
     void final();
 
-    virtual bool handleAccepted(qknet::Socket& socket);
+    virtual int handleAccept(int* handles, int size);
     virtual bool handleStop();
 private:
     std::mutex guard_;
     bool finaled_;
-    qkrtl::Poller& poller_;
-    qknet::SocketAcceptHandle *acceptor_;
-    qknet::SocketConnectionHandlerManager sessions_;
+    qknet::ConnectionManager sessions_;
 };
 
 #endif /**FR_QKNET_SERVER_H*/
